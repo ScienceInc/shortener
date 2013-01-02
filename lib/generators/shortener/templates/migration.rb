@@ -22,5 +22,13 @@ class CreateShortenedUrlsTable < ActiveRecord::Migration
     add_index :shortened_urls, :unique_key, :unique => true
     add_index :shortened_urls, :url
     add_index :shortened_urls, [:owner_id, :owner_type]
+
+    create_table :shortened_clicks do |t|
+      t.integer :shortened_url_id
+      t.text :headers
+      t.string :ip
+      t.string :remote_ip
+      t.timestamps
+    end
   end
 end
