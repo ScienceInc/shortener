@@ -17,10 +17,12 @@ class Shortener::ShortenedUrlsController < ActionController::Base
         sl.increment!(:use_count)
         click = Shortener::ShortenedClick.new
         click.shortener_url_id = s1.id
-        click.headers = request.headers
+        click.agent = request.user_agent
+        click.referer = request.env["HTTP_REFERER"]
         click.ip = request.ip
         click.remote_ip = request.remote_ip
         click.save
+
         ActiveRecord::Base.connection.close
       end
       # do a 301 redirect to the destination url
