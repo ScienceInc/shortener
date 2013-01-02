@@ -25,7 +25,8 @@ class CreateShortenedUrlsTable < ActiveRecord::Migration
 
     create_table :shortened_clicks do |t|
       t.integer :shortened_url_id
-      t.text :headers
+      t.string :agent
+      t.string :referer
       t.string :ip
       t.string :remote_ip
       t.timestamps
