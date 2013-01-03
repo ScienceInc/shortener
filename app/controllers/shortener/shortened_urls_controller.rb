@@ -8,6 +8,14 @@ class Shortener::ShortenedUrlsController < ActionController::Base
     # pull the link out of the db
     sl = ::Shortener::ShortenedUrl.find_by_unique_key(token)
 
+    click = Shortener::ShortenedClick.new
+    click.shortener_url_id = s1.id
+    click.agent = request.user_agent
+    click.referer = request.env["HTTP_REFERER"]
+    click.ip = request.ip
+    click.remote_ip = request.remote_ip
+    click.save
+
     if sl
       # don't want to wait for the increment to happen, make it snappy!
       # this is the place to enhance the metrics captured
