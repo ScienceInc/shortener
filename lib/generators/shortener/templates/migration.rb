@@ -29,6 +29,7 @@ class CreateShortenedUrlsTable < ActiveRecord::Migration
       t.string :referer
       t.string :ip
       t.string :remote_ip
+      t.string :token
       t.timestamps
     end
   end

@@ -8,6 +8,12 @@ class Shortener::ShortenedUrlsController < ActionController::Base
     # pull the link out of the db
     sl = ::Shortener::ShortenedUrl.find_by_unique_key(token)
 
+    token = "#{rand(1000000)}-#{sl.unique_key}"
+    cookies.signed[:key] = {
+      :value => token,
+      :expires => 1.year.from_now
+    }
+
     if sl
       # don't want to wait for the increment to happen, make it snappy!
       # this is the place to enhance the metrics captured
@@ -15,9 +21,10 @@ class Shortener::ShortenedUrlsController < ActionController::Base
       # browser type, ip address etc.
       Thread.new do
         sl.increment!(:use_count)
-        click = Shortener::ShortenedClick.new
+        click = ::Shortener::ShortenedClick.new
         click.shortened_url_id = sl.id
         click.agent = request.user_agent
+        click.token = token
         click.referer = request.env["HTTP_REFERER"]
         click.ip = request.ip
         click.remote_ip = request.remote_ip
