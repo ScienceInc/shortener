@@ -16,7 +16,7 @@ class Shortener::ShortenedUrlsController < ActionController::Base
       Thread.new do
         sl.increment!(:use_count)
         click = Shortener::ShortenedClick.new
-        click.shortener_url_id = sl.id
+        click.shortened_url_id = sl.id
         click.agent = request.user_agent
         click.referer = request.env["HTTP_REFERER"]
         click.ip = request.ip
