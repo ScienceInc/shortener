@@ -10,6 +10,10 @@ class Shortener::ShortenedUrlsController < ActionController::Base
 
     token = "#{rand(1000000)}-#{sl.unique_key}"
     cookies.signed[:linktoken] = {
+      :value => sl.id,
+      :expires => 1.year.from_now
+    }
+    cookies.signed[:clicktoken] = {
       :value => token,
       :expires => 1.year.from_now
     }
