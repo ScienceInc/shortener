@@ -38,13 +38,12 @@ class Shortener::ShortenedUrlsController < ActionController::Base
       end
       # do a 301 redirect to the destination url
       redirect_to sl.url, :status => :moved_permanently
-      
-      #if !sl.hat?
-      #  redirect_to sl.url, :status => :moved_permanently
-      
-      #else
-      #  redirect_to "http://social.shoelovin.com/links/#{sl.unique_key}/share", :status => :moved_permanently
-      #end
+
+      if sl.hat?
+        redirect_to "http://social.shoelovin.com/links/#{sl.unique_key}/share", :status => :moved_permanently
+      else
+        redirect_to sl.url, :status => :moved_permanently
+      end
     end
   end
 
