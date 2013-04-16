@@ -6,7 +6,7 @@ class Shortener::ShortenedUrlsController < ActionController::Base
     token = /^([#{Shortener.key_chars.join}]*).*/.match(params[:id])[1]
 
     # pull the link out of the db
-    sl = ::Shortener::ShortenedUrl.find_by_unique_key(token)
+    sl = ::Shortener::ShortenedUrl.find_by_unique_key!(token)
 
     token = "#{rand(1000000)}-#{sl.unique_key}"
     cookies.signed[:linktoken] = {
@@ -37,11 +37,11 @@ class Shortener::ShortenedUrlsController < ActionController::Base
         ActiveRecord::Base.connection.close
       end
       # do a 301 redirect to the destination url
-      redirect_to sl.url, :status => :moved_permanently
-    else
-      # if we don't find the shortened link, redirect to the root
-      # make this configurable in future versions
-      redirect_to '/'
+      if sl.hat?
+        redirect_to sl.url, :status => :moved_permanently
+      else
+        redirect_to "http://social.shoelovin.com/links/#{sl.unique_key}/share", :status => :moved_permanently
+      end
     end
   end
 
